@@ -7,6 +7,7 @@ public class Controller : MonoBehaviour
 
     public Rigidbody thisrigidbody;
     public float jumpMultiplier;
+    public float MovementMultiplier;
 
     public float HorizontalMultiplier;
     public float VerticalMultiplier;
@@ -20,6 +21,7 @@ public class Controller : MonoBehaviour
     public float JumpForce;
     public float Jumptime;
     public float JumpTimeCounter;
+    public float JumpForceMultiplier;
 
    
 
@@ -38,68 +40,75 @@ public class Controller : MonoBehaviour
 
 
         if (Input.GetKeyDown(KeyCode.Space)) {
-            if (jumpMultiplier > 0)
+            if (JumpTimeCounter > 0)
             {
-                thisrigidbody.velocity = new Vector2(thisrigidbody.velocity.x, JumpForce);
-                JumpTimeCounter -= Time.deltaTime;
+                Jump();
             }
+        }
+
+        if (thisrigidbody.velocity.y < 0)
+        {
+            thisrigidbody.velocity = thisrigidbody.velocity + (Vector3.down * Physics.gravity.y * GravityDown * Time.fixedDeltaTime);
+
+        }
+
+        if (thisrigidbody.velocity.y > 0)
+        {
+
+            thisrigidbody.velocity = thisrigidbody.velocity + (Vector3.up * Physics.gravity.y * GravityUp * Time.fixedDeltaTime);
         }
 
 
 
 
-        float Horizontal;
-        Horizontal = Input.GetAxis("Mouse X");
-        this.transform.Rotate(0, Horizontal * HorizontalMultiplier, 0);
-
-        float Vertical;
-        Vertical = Input.GetAxis("Mouse Y");
-        this.transform.Rotate(-Vertical, 0, 0);
 
 
         if (Input.GetKey(KeyCode.A)) {
 
-            this.transform.Translate(WalkHorizontal,0, 0);
+            thisrigidbody.transform.Translate(WalkHorizontal,0,0);
 
         }
         else {
 
-            this.transform.Translate(0, 0, 0);
+            thisrigidbody.transform.Translate(0, 0, 0);
+
         }
 
         if (Input.GetKey(KeyCode.D))
         {
 
-            this.transform.Translate(-WalkHorizontal,0 , 0);
+            thisrigidbody.transform.Translate(-WalkHorizontal, 0, 0);
+
 
         }
         else
         {
 
-            this.transform.Translate(0, 0, 0);
+            thisrigidbody.transform.Translate(0, 0, 0);
+
         }
 
         if (Input.GetKey(KeyCode.W))
         {
 
-            this.transform.Translate(0,0, -WalkVertical);
+
 
         }
         else
         {
 
-            this.transform.Translate(0, 0, 0);
+
         }
         if (Input.GetKey(KeyCode.S))
         {
 
-            this.transform.Translate(0, 0, WalkVertical);
+           
 
         }
         else
         {
 
-            this.transform.Translate(0, 0, 0);
+           
         }
 
     }
@@ -111,9 +120,25 @@ public class Controller : MonoBehaviour
 
         if(Input.GetKeyDown(KeyCode.E) || collision.gameObject.tag == "Pill") {
 
-            thisrigidbody.velocity = new Vector2(thisrigidbody.velocity.x, JumpForce * 20);
+            thisrigidbody.velocity = new Vector2(0, JumpForce * JumpForceMultiplier);
             JumpTimeCounter -= Time.deltaTime;
             Debug.Log("Clicked");
         }
+    }
+
+
+
+
+
+
+
+
+    void Jump() {
+
+
+
+        thisrigidbody.velocity = Vector3.up *MovementMultiplier;
+
+
     }
 }
